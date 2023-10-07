@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 char medico1[20];
 char medico2[20];
@@ -10,44 +11,70 @@ char data_consulta2[11];
 char data_consulta3[11];
 int medicoExiste;
 
+void sincronizarLeituraDados() {
+
+    FILE * file;
+
+    file = fopen("data.txt", "r+");
+
+    if (file == NULL) {
+        printf("Erro ao salvar dados\n");
+        return;
+    }
+
+    fread(&medico1, sizeof(medico1), 1, file);
+    fread(&medico2, sizeof(medico2), 1, file);
+    fread(&medico3, sizeof(medico3), 1, file);
+    fread(&data_consulta1, sizeof(data_consulta1), 1, file);
+    fread(&data_consulta2, sizeof(data_consulta2), 1, file);
+    fread(&data_consulta3, sizeof(data_consulta3), 1, file);
+
+    fclose(file);
+
+}
+
+
+void sincronizarEscritaDados() {
+
+    FILE * file;
+
+    file = fopen("data.txt", "w+");
+
+    if (file == NULL) {
+        printf("Erro ao salvar dados\n");
+        return;
+    }
+
+    fwrite(medico1 , 1 , sizeof(medico1) , file );
+    fwrite(medico2 , 1 , sizeof(medico2) , file );
+    fwrite(medico3 , 1 , sizeof(medico3) , file );
+    fwrite(data_consulta1 , 1 , sizeof(data_consulta1) , file );
+    fwrite(data_consulta2 , 1 , sizeof(data_consulta2) , file );
+    fwrite(data_consulta3 , 1 , sizeof(data_consulta3) , file );
+
+    fclose(file);
+
+}
+
+
 void salvar() {
 
-    printf("Digite o nome do medico a ser salvo\n");
-    fflush(stdin);
-    printf("Digite o Nome do 1o Medico: \n");
+    FILE * file;
 
-    fflush(stdin);
-    gets(medico1);
+    file = fopen("data.txt", "w+");
+
+    if (file == NULL) {
+        printf("Erro ao salvar dados\n");
+        return;
+    }
+
     medicoExiste = 0;
 
+    printf("Digite o nome do medico a ser salvo\n");
     do {
-        printf("Digite o Nome do 2o Medico: \n");
+        printf("Digite o Nome do 1o Medico: \n");
         fflush(stdin);
-        gets(medico2);
-        for (int i = 0; i < 20; i++) {
-
-            if (medico1[i] == medico2[i]) {
-                medicoExiste = 1;
-                continue;
-            } else {
-                medicoExiste = 0;
-                break;
-            }
-
-        }
-
-
-        if (medicoExiste == 1) {
-            printf("O medico ja existe");
-
-        }
-
-    } while (medicoExiste == 1);
-
-    do {
-        printf("Digite o Nome do 3o Medico: \n");
-        fflush(stdin);
-        gets(medico3);
+    gets(medico1);
         for (int i = 0; i < 20; i++) {
 
             if (medico1[i] == medico3[i]) {
@@ -67,7 +94,7 @@ void salvar() {
 
         for (int i = 0; i < 20; i++) {
 
-            if (medico2[i] == medico3[i]) {
+            if (medico1[i] == medico2[i]) {
                 medicoExiste = 1;
                 continue;
             } else {
@@ -85,24 +112,125 @@ void salvar() {
 
     } while (medicoExiste == 1);
 
+    fwrite(medico1 , 1 , sizeof(medico1) , file );
+
+
+    do {
+        printf("Digite o Nome do 2o Medico: \n");
+        fflush(stdin);
+        gets(medico2);
+        for (int i = 0; i < 20; i++) {
+
+            if (medico2[i] == medico1[i]) {
+                medicoExiste = 1;
+                continue;
+            } else {
+                medicoExiste = 0;
+                break;
+            }
+
+        }
+
+
+        if (medicoExiste == 1) {
+            printf("O medico ja existe");
+
+        }
+
+        for (int i = 0; i < 20; i++) {
+
+            if (medico2[i] == medico1[i]) {
+                medicoExiste = 1;
+                continue;
+            } else {
+                medicoExiste = 0;
+                break;
+            }
+
+        }
+
+        if (medicoExiste == 1) {
+            printf("O medico ja existe\n");
+            continue;
+
+        }
+
+    } while (medicoExiste == 1);
+
+    fwrite(medico2 , 1 , sizeof(medico2) , file );
+
+
+    do {
+        printf("Digite o Nome do 3o Medico: \n");
+        fflush(stdin);
+        gets(medico3);
+        for (int i = 0; i < 20; i++) {
+
+            if (medico3[i] == medico1[i]) {
+                medicoExiste = 1;
+                continue;
+            } else {
+                medicoExiste = 0;
+                break;
+            }
+
+        }
+
+        if (medicoExiste == 1) {
+            printf("O medico ja existe\n");
+            continue;
+        }
+
+        for (int i = 0; i < 20; i++) {
+
+            if (medico3[i] == medico1[i]) {
+                medicoExiste = 1;
+                continue;
+            } else {
+                medicoExiste = 0;
+                break;
+            }
+
+        }
+
+        if (medicoExiste == 1) {
+            printf("O medico ja existe\n");
+            continue;
+
+        }
+
+    } while (medicoExiste == 1);
+
+    fwrite(medico3 , 1 , sizeof(medico3) , file );
+
+
 
     printf("Digite a 1a Data: \n");
     fflush(stdin);
     gets(data_consulta1);
+    fwrite(data_consulta1 , 1 , sizeof(data_consulta1) , file );
+
     printf("Digite a 2a Data: \n");
     fflush(stdin);
     gets(data_consulta2);
+    fwrite(data_consulta2 , 1 , sizeof(data_consulta2) , file );
+
     printf("Digite a 3a Data: \n");
     fflush(stdin);
     gets(data_consulta3);
+    fwrite(data_consulta3 , 1 , sizeof(data_consulta3) , file );
 
 
     printf("\n\nDados inseridos com Sucesso!\n\n");
+    fclose(file);
+
 
 }
 
 void listar() {
-    printf("funcao listar\n");
+
+    sincronizarLeituraDados();
+
     printf("Medico 1: ");
     puts(medico1);
     printf("\nMedico 2: ");
@@ -116,140 +244,88 @@ void listar() {
     printf("\n3a Data: ");
     puts(data_consulta3);
     printf("\n\nDados Listados com Sucesso!\n\n");
+
 }
-//
-//int pesquisarMedico() {
-//    medicoExiste = 0;
-//    printf("\nfuncao pesquisarMedico\n");
-//    fflush(stdin);
-//
-//    printf("Digite o nome do medico que deseja pesquisar: \n");
-//    fflush(stdin);
-//    gets(pesquisa_medico);
-//    for (int i = 0; i < 20; i++) {
-//
-//        if (pesquisa_medico[i] == medico1[i]) {
-//            printf("%c", medico1[i]);
-//            printf("%c", pesquisa_medico[i]);
-//
-//            medicoExiste = 1;
-//        } else {
-//            medicoExiste = 0;
-//            break;
-//        }
-//    }
-//
-//    for (int i = 0; i < 20; i++) {
-//        if (medicoExiste == 1) {
-//            break;
-//        }
-//        if (pesquisa_medico[i] == medico2[i]) {
-//            medicoExiste = 2;
-//        } else {
-//            medicoExiste = 0;
-//            break;
-//        }
-//    }
-//
-//    for (int i = 0; i < 20; i++) {
-//        if (medicoExiste == 1 || medicoExiste == 2) {
-//            break;
-//        }
-//        if (pesquisa_medico[i] == medico3[i]) {
-//            medicoExiste = 3;
-//        } else {
-//            medicoExiste = 0;
-//            break;
-//        }
-//    }
-//
-//    switch (medicoExiste) {
-//        case 1 :
-//            printf("\nO medico e: %s", medico1);
-//            printf("\nA data e: %s", data_consulta1);
-//            break;
-//        case 2 :
-//            printf("\nO medico e: %s", medico2);
-//            printf("\nA data e: %s", data_consulta2);
-//            break;
-//        case 3 :
-//            printf("\nO medico e: %s", medico3);
-//            printf("\nA data e: %s", data_consulta3);
-//            break;
-//
-//        default:
-//            printf("\nO medico NAO esta na Base de Dados!\n\n");
-//
-//    }
-//    return medicoExiste;
-//
-//}
 
-//void pesquisarData() {
-//
-//    printf("funcao pesquisarData\n");
-//    int dataExiste = 0;
-//    fflush(stdin);
-//
-//    printf("Digite a Data que deseja pesquisar: \n");
-//    fflush(stdin);
-//    gets(pesquisa_data);
-//    for(int i = 0; i < 11; i++) {
-//
-//
-//        if(pesquisa_data[i] == data_consulta1[i]) {
-//            dataExiste = 1;
-//        } else {
-//            dataExiste = 0;
-//            break;
-//        }
-//    }
-//    printf("na data %s consta o seguinte medico\n", pesquisa_data);
-//    if(dataExiste == 1) {
-//        puts(medico1);
-//    }
-//
-//
-//    for(int i = 0; i < 11; i++) {
-//
-//        if(pesquisa_data[i] == data_consulta2[i]) {
-//            dataExiste = 2;
-//        } else {
-//            dataExiste = 0;
-//            break;
-//        }
-//    }
-//
-//    if(dataExiste == 2) {
-//        puts(medico2);
-//    }
-//
-//    for(int i = 0; i < 11; i++) {
-//
-//        if(pesquisa_data[i] == data_consulta3[i]) {
-//            dataExiste = 3;
-//        } else {
-//            dataExiste = 0;
-//            break;
-//        }
-//    }
-//
-//    if(dataExiste == 3) {
-//        puts(medico3);
-//    }
-//
-//
-//    if(dataExiste == 0)
-//    {
-//        printf("NAO existe consulta com essa Data! \n");
-//    }
-//
-//}
+int pesquisarMedico() {
+    medicoExiste = 0;
+    fflush(stdin);
 
+    printf("Digite o nome do medico que deseja pesquisar: \n");
+    fflush(stdin);
+    gets(pesquisa_medico);
+
+    sincronizarLeituraDados();
+
+    for (int i = 0; i < 20; i++) {
+
+        if(pesquisa_medico[i] != '\0') {
+
+        if (pesquisa_medico[i] == medico1[i]) {
+
+            medicoExiste = 1;
+        } else {
+            medicoExiste = 0;
+            break;
+        }
+        }
+    }
+
+    for (int i = 0; i < 20; i++) {
+        if (medicoExiste == 1) {
+            break;
+        }
+        if(pesquisa_medico[i] != '\0') {
+
+            if (pesquisa_medico[i] == medico2[i]) {
+                medicoExiste = 2;
+            } else {
+                medicoExiste = 0;
+                break;
+            }
+        }
+    }
+
+    for (int i = 0; i < 20; i++) {
+        if (medicoExiste == 1 || medicoExiste == 2) {
+            break;
+        }
+        if(pesquisa_medico[i] != '\0') {
+
+            if (pesquisa_medico[i] == medico3[i]) {
+                medicoExiste = 3;
+            } else {
+                medicoExiste = 0;
+                break;
+            }
+        }
+    }
+
+
+    switch (medicoExiste) {
+        case 1 :
+            printf("\nO medico e: %s\n", medico1);
+            printf("\nA data e: %s\n", data_consulta1);
+            break;
+        case 2 :
+            printf("\nO medico e: %s\n", medico2);
+            printf("\nA data e: %s\n", data_consulta2);
+            break;
+        case 3 :
+            printf("\nO medico e: %s\n", medico3);
+            printf("\nA data e: %s\n", data_consulta3);
+            break;
+
+        default:
+            printf("\nO medico nao esta na Base de Dados!\n\n");
+
+    }
+    return medicoExiste;
+
+}
 
 void pesquisarData() {
 
-    printf("funcao pesquisarData\n");
     int dataExiste = 0;
     int dataNum = 0;
 
@@ -258,6 +334,8 @@ void pesquisarData() {
     printf("Digite a Data que deseja pesquisar: \n");
     fflush(stdin);
     gets(pesquisa_data);
+
+    sincronizarLeituraDados();
 
     for (int i = 0; i < 11; i++) {
         if (pesquisa_data[i] == data_consulta1[i]) {
@@ -273,8 +351,11 @@ void pesquisarData() {
         dataExiste = 1;
     }
 
+
     if (dataNum == 1) {
+
         printf("%s\n", medico1);
+
     }
 
     for (int i = 0; i < 11; i++) {
@@ -295,6 +376,8 @@ void pesquisarData() {
     }
 
     if (dataNum == 2) {
+
+
         printf("%s\n", medico2);
     }
 
@@ -315,246 +398,195 @@ void pesquisarData() {
     }
 
     if (dataNum == 3) {
+
+
         printf("%s\n", medico3);
     }
 
+
     if (dataExiste == 0) {
-        printf("NAO existe consulta com essa Data! \n");
+        printf("nao existe consulta com essa Data! \n");
     }
 }
 
-//
-//void alterar() {
-//
-//    char novoMedico[20];
-//
-//    printf("funcao alterar");
-//    printf("qual medico quer alterar?");
-//    int medicoNum = pesquisarMedico();
-//    printf("O medico a ser alterado é o medico %d", medicoNum);
-//
-//    do {
-//        printf("Digite o Nome do %do Medico: \n", medicoNum);
-//        fflush(stdin);
-//        gets(novoMedico);
-//        for (int i = 0; i < 20; i++) {
-//
-//            if (novoMedico[i] == medico1[i]) {
-//                medicoExiste = 1;
-//                continue;
-//            } else {
-//                medicoExiste = 0;
-//                break;
-//            }
-//
-//        }
-//
-//        if (medicoExiste == 1) {
-//            printf("O medico ja existe\n");
-//            continue;
-//        }
-//
-//        for (int i = 0; i < 20; i++) {
-//
-//            if (novoMedico[i] == medico2[i]) {
-//                medicoExiste = 2;
-//                continue;
-//            } else {
-//                medicoExiste = 0;
-//                break;
-//            }
-//
-//        }
-//
-//        if (medicoExiste == 2) {
-//            printf("O medico ja existe\n");
-//            continue;
-//
-//        }
-//
-//        for (int i = 0; i < 20; i++) {
-//
-//            if (novoMedico[i] == medico3[i]) {
-//                medicoExiste = 3;
-//                continue;
-//            } else {
-//                medicoExiste = 0;
-//                break;
-//            }
-//
-//        }
-//
-//        if (medicoExiste == 3) {
-//            printf("O medico ja existe\n");
-//            continue;
-//
-//        }
-//
-//    } while (medicoExiste == 1);
-//
-//    switch (medicoNum) {
-//        case 1:
-//            for (int i = 0; i < 20; i++) {
-//                fflush(stdin);
-//                medico1[i] = novoMedico[i];
-//
-//            }
-//            printf("Medico 1 alterado com sucesso!");
-//
-//            break;
-//        case 2:
-//            for (int i = 0; i < 20; i++) {
-//                fflush(stdin);
-//                medico2[i] = novoMedico[i];
-//            }
-//            printf("Medico 2 alterado com sucesso!");
-//
-//            break;
-//        case 3:
-//            for (int i = 0; i < 20; i++) {
-//                fflush(stdin);
-//                medico3[i] = novoMedico[i];
-//            }
-//            printf("Medico 3 alterado com sucesso!");
-//
-//            break;
-//
-//        default:
-//            printf("Ocorreu um erro!");
-//            break;
-//    }
-//
-//
-//}
+void alterar() {
+
+    char novoMedico[20];
+
+    printf("qual medico quer alterar?\n");
+    int medicoNum = pesquisarMedico();
+    printf("O medico a ser alterado e o medico %d\n", medicoNum);
+
+    do {
+        printf("Digite o novo nome do %do Medico: \n", medicoNum);
+        fflush(stdin);
+        gets(novoMedico);
+
+        for (int i = 0; i < 20; i++) {
+
+            if (novoMedico[i] == medico1[i]) {
+                medicoExiste = 1;
+                continue;
+            } else {
+                medicoExiste = 0;
+                break;
+            }
+
+        }
+
+        if (medicoExiste == 1) {
+            printf("O medico ja existe\n");
+            continue;
+        }
+
+        for (int i = 0; i < 20; i++) {
+
+            if (novoMedico[i] == medico2[i]) {
+                medicoExiste = 2;
+                continue;
+            } else {
+                medicoExiste = 0;
+                break;
+            }
+
+        }
+
+        if (medicoExiste == 2) {
+            printf("O medico ja existe\n");
+            continue;
+
+        }
+
+        for (int i = 0; i < 20; i++) {
+
+            if (novoMedico[i] == medico3[i]) {
+                medicoExiste = 3;
+                continue;
+            } else {
+                medicoExiste = 0;
+                break;
+            }
+
+        }
+
+        if (medicoExiste == 3) {
+            printf("O medico ja existe\n");
+            continue;
+
+        }
+
+    } while (medicoExiste == 1);
+
+    printf("Digite a nova data de consulta do %do Medico: \n", medicoNum);
+    fflush(stdin);
+    gets(data_consulta1);
+
+    FILE * file;
+
+    file = fopen("data.txt", "w+");
+
+    if (file == NULL) {
+        printf("Erro ao salvar dados\n");
+        return;
+    }
+
+
+    switch (medicoNum) {
+        case 1:
+            for (int i = 0; i < 20; i++) {
+                fflush(stdin);
+                medico1[i] = novoMedico[i];
+            }
+
+            break;
+        case 2:
+            for (int i = 0; i < 20; i++) {
+                fflush(stdin);
+                medico2[i] = novoMedico[i];
+            }
+
+            break;
+        case 3:
+            for (int i = 0; i < 20; i++) {
+                fflush(stdin);
+                medico3[i] = novoMedico[i];
+            }
+
+            break;
+
+        default:
+            printf("Ocorreu um erro!\n");
+            break;
+    }
+
+
+    if(medicoNum > 0) {
+        sincronizarEscritaDados();
+        printf("Medico %d salvo com sucesso!\n", medicoNum);
+    }
+
+    fclose(file);
+}
 
 void sair() {
-    printf("funcao sair");
-    return;
+    exit(0);
 }
-//
-//int pesquisarMedico() {
-//    medicoExiste = 0;
-//    printf("\nfuncao pesquisarMedico\n");
-//    printf("Digite o nome do medico que deseja pesquisar: \n");
-//    fflush(stdin);
-//    gets(pesquisa_medico);
-//
-//    int i = 0;
-//
-//    // Compare os caracteres individualmente.
-//    for (i = 0; i < 20; i++) {
-//        if (pesquisa_medico[i] != '\0' && pesquisa_medico[i] != medico1[i]) {
-//            break;
-//        }
-//    }
-//
-//    if (i == 20 && medico1[i] == '\0') {
-//        printf("\nO medico e: %s", medico1);
-//        medicoExiste = 1;
-//    }
-//
-//    for (i = 0; i < 20; i++) {
-//        if (pesquisa_medico[i] != '\0' && pesquisa_medico[i] != medico2[i]) {
-//            break;
-//        }
-//    }
-//
-//    if (i == 20 && medico2[i] == '\0') {
-//        printf("\nO medico e: %s", medico2);
-//        medicoExiste = 2;
-//    }
-//
-//    for (i = 0; i < 20; i++) {
-//        if (pesquisa_medico[i] != '\0' && pesquisa_medico[i] != medico3[i]) {
-//            break;
-//        }
-//    }
-//
-//    if (i == 20 && medico3[i] == '\0') {
-//        printf("\nO medico e: %s", medico3);
-//        medicoExiste = 3;
-//    }
-//
-//    if (medicoExiste == 0) {
-//        printf("\nO medico NAO esta na Base de Dados!\n\n");
-//    }
-//
-//    return medicoExiste;
-//}
-//
-//void alterar() {
-//    char novoMedico[20];
-//
-//    printf("funcao alterar\n");
-//    printf("Qual medico quer alterar?\n");
-//    int medicoNum = pesquisarMedico();
-//    printf("O medico a ser alterado e o medico %d", medicoNum);
-//
-//    if (medicoNum != 0) {
-//        printf("Digite o novo nome para o medico %d: \n", medicoNum);
-//        fflush(stdin);
-//        gets(novoMedico);
-//
-//        int i = 0;
-//
-//        switch (medicoNum) {
-//            case 1:
-//                for (i = 0; i < 20; i++) {
-//                    medico1[i] = novoMedico[i];
-//                }
-//                printf("Medico 1 alterado com sucesso!");
-//                break;
-//            case 2:
-//                for (i = 0; i < 20; i++) {
-//                    medico2[i] = novoMedico[i];
-//                }
-//                printf("Medico 2 alterado com sucesso!");
-//                break;
-//            case 3:
-//                for (i = 0; i < 20; i++) {
-//                    medico3[i] = novoMedico[i];
-//                }
-//                printf("Medico 3 alterado com sucesso!");
-//                break;
-//            default:
-//                printf("Ocorreu um erro!");
-//                break;
-//        }
-//    }
-//}
 
 void excluir() {
-    printf("funcao excluir");
-    printf("qual medico quer excluir?");
+    printf("qual medico quer excluir?\n");
     int medicoNum = pesquisarMedico();
-    printf("O medico a ser excluido é o medico %d", medicoNum);
+    printf("O medico a ser excluido e o medico %d\n", medicoNum);
+
+    FILE * file;
+
+    file = fopen("data.txt", "w+");
+
+    if (file == NULL) {
+        printf("Erro ao salvar dados\n");
+        return;
+    }
 
     switch (medicoNum) {
         case 1:
             for (int i = 0; i < 20; i++) {
                 medico1[i] = '\0';
-
+                if(i < 11) {
+                    data_consulta1[i] = '\0';
+                }
             }
-            printf("Medico 1 excluido com sucesso!");
+
 
             break;
         case 2:
             for (int i = 0; i < 20; i++) {
                 medico2[i] = '\0';
+                if(i < 11) {
+                    data_consulta2[i] = '\0';
+                }
             }
-            printf("Medico 2 excluido com sucesso!");
             break;
         case 3:
             for (int i = 0; i < 20; i++) {
                 medico3[i] = '\0';
+                if(i < 11) {
+                    data_consulta3[i] = '\0';
+                }
             }
-            printf("Medico 3 excluido com sucesso!");
             break;
 
         default:
-            printf("Ocorreu um erro!");
+            printf("Ocorreu um erro!\n.");
             break;
     }
+
+
+
+    if(medicoNum > 0) {
+        sincronizarEscritaDados();
+        printf("Medico %d excluido com sucesso!\n", medicoNum);
+    }
+
+    fclose(file);
 }
 
 
@@ -596,9 +628,8 @@ int main() {
             case 7:
                 sair();
                 break;
+
         }
     } while (menu != 7);
-
-
     return 0;
 }
